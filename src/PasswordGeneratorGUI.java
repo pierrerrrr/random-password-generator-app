@@ -1,8 +1,12 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 // front
 public class PasswordGeneratorGUI extends JFrame {
+    private PasswordGenerator passwordGenerator;
+
     public PasswordGeneratorGUI() {
         // renderiza o titulo e o GUI
         super("Gerador de Senhas");
@@ -12,6 +16,7 @@ public class PasswordGeneratorGUI extends JFrame {
         setLayout(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
+        passwordGenerator = new PasswordGenerator();
         addGuiComponents();
     }
 
@@ -72,6 +77,22 @@ public class PasswordGeneratorGUI extends JFrame {
         JButton generateButton = new JButton("Generate");
         generateButton.setFont( new Font("Dialog", Font.PLAIN, 32));
         generateButton.setBounds(155, 477, 250, 61);
+        generateButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(passwordLengthInputArea.getText().length() <= 0) return;
+                boolean anyToggleSelected = lowercaseToggle.isSelected() || uppercaseToggle.isSelected() ||
+                        numbersToggle.isSelected() || symbolsToggle.isSelected();
+
+                int passwordLength = Integer.parseInt(passwordLengthInputArea.getText());
+                if(anyToggleSelected) {
+                    String generatedPassword = passwordGenerator.generatePassword(passwordLength, uppercaseToggle.isSelected(), lowercaseToggle.isSelected(),
+                            numbersToggle.isSelected(), symbolsToggle.isSelected());
+
+                    passwordOutput.setText(generatedPassword);
+                }
+            }
+        });
         add(generateButton);
     }
 }
